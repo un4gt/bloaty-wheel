@@ -1,0 +1,84 @@
+[build-system]
+requires = ["scikit-build-core>=0.10"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "bloaty-wheel"
+version = "1.1.0.0"
+description = "Python wheel distribution of Google Bloaty McBloatface - a size profiler for binaries"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Google (original)", email = "opensource@google.com"},
+    {name = "Tumuer Zunong", email = "muerzunong.tu@gmail.com"}
+]
+keywords = ["bloaty", "binary", "size", "profiler", "elf", "mach-o", "pe"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Build Tools",
+]
+
+[project.urls]
+Homepage = "https://github.com/google/bloaty"
+Repository = "https://github.com/yourusername/bloaty-wheel"
+"Bug Tracker" = "https://github.com/yourusername/bloaty-wheel/issues"
+
+[project.scripts]
+bloaty = "bloaty:bloaty"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0",
+    "build>=1.0",
+]
+
+[tool.scikit-build]
+cmake.build-type = "Release"
+wheel.packages = ["src/bloaty"]
+wheel.py-api = "py2.py3"
+wheel.install-dir = "bloaty"
+
+[tool.cibuildwheel]
+build-verbosity = 3
+environment = "CMAKE_GENERATOR=Ninja"
+test-command = "pytest {package}/tests"
+test-requires = ["pytest"]
+
+# 跳过 32 位和旧版本 Python
+skip = ["*-win32", "*-manylinux_i686", "pp*", "cp36-*", "cp37-*"]
+
+[tool.cibuildwheel.linux]
+before-all = [
+    "yum install -y ninja-build || apt-get install -y ninja-build || apk add ninja"
+]
+
+[tool.cibuildwheel.macos]
+before-all = [
+    "brew install ninja"
+]
+
+[tool.cibuildwheel.windows]
+before-build = [
+    "pip install ninja"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
