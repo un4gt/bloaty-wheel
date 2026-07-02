@@ -177,7 +177,7 @@ bloaty-wheel 的版本号格式为 `X.Y.Z.W`：
 ## 相关链接
 
 - [Google Bloaty 官方仓库](https://github.com/google/bloaty)
-- [Bloaty 文档](https://github.com/google/bloaty/blob/master/doc/using.md)
+- [Bloaty 文档](https://github.com/google/bloaty/blob/main/doc/using.md)
 - [clangd-wheel](https://github.com/jmpfar/clangd-wheel) - 类似项目，启发了 bloaty-wheel 的设计
 
 ## 致谢

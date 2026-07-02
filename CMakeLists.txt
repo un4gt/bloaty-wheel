@@ -14,9 +14,9 @@ string(REGEX MATCH "^([0-9]+)\.([0-9]+)" BLOATY_VERSION
 # 使用 Git 克隆 bloaty 仓库（使用主分支以获取最新修复）
 # v1.1 标签的依赖项太老，与新版 CMake 不兼容
 set(BLOATY_GIT_URL "https://github.com/google/bloaty.git")
-set(BLOATY_GIT_TAG "master")
+set(BLOATY_GIT_TAG "main")
 
-message(STATUS "Building bloaty from master branch")
+message(STATUS "Building bloaty from main branch")
 message(STATUS "Git repository: ${BLOATY_GIT_URL}")
 
 # 设置构建目录
