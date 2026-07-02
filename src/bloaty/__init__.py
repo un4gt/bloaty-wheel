@@ -31,8 +31,9 @@ def _get_executable(name: str) -> Path:
         FileNotFoundError: 如果找不到可执行文件
     """
     # 检测多种可能的可执行文件扩展名
+    package_root = Path(str(files("bloaty")))
     possibles = [
-        Path(files("bloaty") / f"data/bin/{name}{suffix}")
+        package_root / "data" / "bin" / f"{name}{suffix}"
         for suffix in ("", ".exe")
     ]
 
