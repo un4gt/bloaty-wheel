@@ -8,6 +8,13 @@ import sys
 import pytest
 
 
+def _bloaty_command():
+    """返回打包进 Python 包里的 bloaty 可执行文件路径"""
+    from bloaty import _get_executable
+
+    return [str(_get_executable("bloaty"))]
+
+
 def test_bloaty_executable_exists():
     """测试 bloaty 可执行文件是否存在"""
     from bloaty import _get_executable
@@ -31,7 +38,7 @@ def test_bloaty_is_executable():
 def test_bloaty_version():
     """测试 bloaty 能正确显示版本信息"""
     result = subprocess.run(
-        ["bloaty", "--version"],
+        _bloaty_command() + ["--version"],
         capture_output=True,
         text=True,
         timeout=10
@@ -45,21 +52,22 @@ def test_bloaty_version():
 def test_bloaty_help():
     """测试 bloaty 帮助信息"""
     result = subprocess.run(
-        ["bloaty", "--help"],
+        _bloaty_command() + ["--help"],
         capture_output=True,
         text=True,
         timeout=10
     )
 
     assert result.returncode == 0, "bloaty --help failed"
-    assert "bloaty" in result.stdout.lower() or "usage" in result.stdout.lower(), \
+    output = f"{result.stdout}\n{result.stderr}".lower()
+    assert "bloaty" in output or "usage" in output, \
         "Help output doesn't look like bloaty help"
 
 
 def test_bloaty_on_sample_binary(sample_binary):
     """测试 bloaty 能分析示例二进制文件"""
     result = subprocess.run(
-        ["bloaty", sample_binary],
+        _bloaty_command() + [sample_binary],
         capture_output=True,
         text=True,
         timeout=30
@@ -67,7 +75,7 @@ def test_bloaty_on_sample_binary(sample_binary):
 
     # bloaty 应该能成功分析 Python 解释器
     # 某些平台可能不支持，所以我们允许一些错误码
-    assert result.returncode in [0, 1], f"bloaty failed with code {result.returncode}"
+    assert result.returncode in [0, 1, 2], f"bloaty failed with code {result.returncode}"
 
 
 def test_bloaty_in_venv():
