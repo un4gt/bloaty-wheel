@@ -12,18 +12,13 @@ endif()
 string(REGEX MATCH "^([0-9]+)\.([0-9]+)" BLOATY_VERSION
              "${SKBUILD_PROJECT_VERSION}")
 
-# 构建下载 URL - 使用官方 GitHub 发布的源码包
-# bloaty 的 release tag 是 v1.1，文件名是 bloaty-1.1.tar.bz2
+# 使用 Git 克隆 bloaty 仓库（包含 submodules）
 set(BLOATY_VERSION_TAG "v${BLOATY_VERSION}")
-set(BLOATY_DOWNLOAD_URL
-    "https://github.com/google/bloaty/releases/download/${BLOATY_VERSION_TAG}/bloaty-${BLOATY_VERSION}.tar.bz2")
-
-# 如果官方发布不可用，从主分支克隆（备用方案）
 set(BLOATY_GIT_URL "https://github.com/google/bloaty.git")
-set(BLOATY_GIT_TAG "${BLOATY_VERSION_TAG}")
 
 message(STATUS "Building bloaty version: ${BLOATY_VERSION}")
-message(STATUS "Download URL: ${BLOATY_DOWNLOAD_URL}")
+message(STATUS "Git repository: ${BLOATY_GIT_URL}")
+message(STATUS "Git tag: ${BLOATY_VERSION_TAG}")
 
 # 设置构建目录
 set(BLOATY_BUILD_DIR "${CMAKE_BINARY_DIR}/bloaty-build")
@@ -60,11 +55,13 @@ if(MSVC)
        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>)
 endif()
 
-# 使用 ExternalProject 下载和构建 bloaty
+# 使用 ExternalProject 从 Git 克隆和构建 bloaty
 ExternalProject_Add(
   build-bloaty
-  URL ${BLOATY_DOWNLOAD_URL}
-  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+  GIT_REPOSITORY ${BLOATY_GIT_URL}
+  GIT_TAG ${BLOATY_VERSION_TAG}
+  GIT_SUBMODULES_RECURSE ON
+  GIT_SHALLOW ON
   PREFIX ${CMAKE_BINARY_DIR}/bloaty-prefix
   BINARY_DIR ${BLOATY_BUILD_DIR}
   CMAKE_ARGS ${BLOATY_CMAKE_ARGS}
@@ -72,19 +69,10 @@ ExternalProject_Add(
   BUILD_COMMAND ${CMAKE_COMMAND} --build . --config Release
   INSTALL_COMMAND ${CMAKE_COMMAND} --build . --config Release --target install
   LOG_DOWNLOAD ON
+  LOG_UPDATE ON
   LOG_CONFIGURE ON
   LOG_BUILD ON
   LOG_INSTALL ON)
-
-# 如果需要初始化 git submodules（当从 git 克隆时）
-ExternalProject_Add_Step(
-  build-bloaty init-submodules
-  COMMAND git submodule update --init --recursive || true
-  WORKING_DIRECTORY <SOURCE_DIR>
-  DEPENDEES download
-  DEPENDERS configure
-  ALWAYS FALSE
-  LOG ON)
 
 # 减小二进制体积
 find_program(STRIP_EXECUTABLE strip)
