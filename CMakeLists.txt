@@ -8,10 +8,12 @@ if(NOT DEFINED SKBUILD_PROJECT_VERSION)
 endif()
 
 # 提取 bloaty 版本号（去掉最后的 .0 后缀）
-string(REGEX MATCH "^([0-9]+)\.([0-9]+)\.([0-9]+)" BLOATY_VERSION
+# 例如：1.1.0.0 -> 1.1
+string(REGEX MATCH "^([0-9]+)\.([0-9]+)" BLOATY_VERSION
              "${SKBUILD_PROJECT_VERSION}")
 
 # 构建下载 URL - 使用官方 GitHub 发布的源码包
+# bloaty 的 release tag 是 v1.1，文件名是 bloaty-1.1.tar.bz2
 set(BLOATY_VERSION_TAG "v${BLOATY_VERSION}")
 set(BLOATY_DOWNLOAD_URL
     "https://github.com/google/bloaty/releases/download/${BLOATY_VERSION_TAG}/bloaty-${BLOATY_VERSION}.tar.bz2")
