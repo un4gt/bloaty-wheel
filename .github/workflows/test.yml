@@ -58,7 +58,10 @@ jobs:
           python -m pip install -v -e ".[test]"
 
       - name: Run tests
-        run: pytest tests/ -v
+        env:
+          DYLD_FALLBACK_LIBRARY_PATH: /opt/homebrew/lib:/usr/local/lib
+          DYLD_LIBRARY_PATH: /opt/homebrew/lib:/usr/local/lib
+        run: python -m pytest tests/ -v
 
   lint:
     name: Lint and format check
