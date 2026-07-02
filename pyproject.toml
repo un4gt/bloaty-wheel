@@ -32,8 +32,8 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/google/bloaty"
-Repository = "https://github.com/yourusername/bloaty-wheel"
-"Bug Tracker" = "https://github.com/yourusername/bloaty-wheel/issues"
+Repository = "https://github.com/un4gt/bloaty-wheel"
+"Bug Tracker" = "https://github.com/un4gt/bloaty-wheel/issues"
 
 [project.scripts]
 bloaty = "bloaty:bloaty"
