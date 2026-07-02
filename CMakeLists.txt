@@ -7,18 +7,17 @@ if(NOT DEFINED SKBUILD_PROJECT_VERSION)
   message(FATAL_ERROR "SKBUILD_PROJECT_VERSION is not defined")
 endif()
 
-# 提取 bloaty 版本号（去掉最后的 .0 后缀）
-# 例如：1.1.0.0 -> 1.1
+# 提取 bloaty 版本号（用于显示）
 string(REGEX MATCH "^([0-9]+)\.([0-9]+)" BLOATY_VERSION
              "${SKBUILD_PROJECT_VERSION}")
 
-# 使用 Git 克隆 bloaty 仓库（包含 submodules）
-set(BLOATY_VERSION_TAG "v${BLOATY_VERSION}")
+# 使用 Git 克隆 bloaty 仓库（使用主分支以获取最新修复）
+# v1.1 标签的依赖项太老，与新版 CMake 不兼容
 set(BLOATY_GIT_URL "https://github.com/google/bloaty.git")
+set(BLOATY_GIT_TAG "master")
 
-message(STATUS "Building bloaty version: ${BLOATY_VERSION}")
+message(STATUS "Building bloaty from master branch")
 message(STATUS "Git repository: ${BLOATY_GIT_URL}")
-message(STATUS "Git tag: ${BLOATY_VERSION_TAG}")
 
 # 设置构建目录
 set(BLOATY_BUILD_DIR "${CMAKE_BINARY_DIR}/bloaty-build")
@@ -38,6 +37,8 @@ set(BLOATY_CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=Release
     -DCMAKE_INSTALL_PREFIX=${BLOATY_INSTALL_DIR}
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+    # 允许旧版 CMake 项目构建（capstone 子模块需要）
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
     # 禁用系统库，使用捆绑的依赖项确保静态链接
     -DBLOATY_PREFER_SYSTEM_CAPSTONE=NO
     -DBLOATY_PREFER_SYSTEM_PROTOBUF=NO
@@ -59,7 +60,7 @@ endif()
 ExternalProject_Add(
   build-bloaty
   GIT_REPOSITORY ${BLOATY_GIT_URL}
-  GIT_TAG ${BLOATY_VERSION_TAG}
+  GIT_TAG ${BLOATY_GIT_TAG}
   GIT_SUBMODULES_RECURSE ON
   GIT_SHALLOW ON
   PREFIX ${CMAKE_BINARY_DIR}/bloaty-prefix

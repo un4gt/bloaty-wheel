@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "bloaty-wheel"
-version = "1.0.0"
+version = "1.1.0"
 description = "Python wheel distribution of Google Bloaty McBloatface - a size profiler for binaries"
 readme = "README.md"
 requires-python = ">=3.8"

@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.8', '3.11', '3.13']
+        python-version: ["3.8", "3.11", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -52,7 +52,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install linting tools
         run: |
