@@ -36,21 +36,6 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
 
-      # 安装 Ninja 构建工具
-      - name: Install Ninja (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ninja-build
-
-      - name: Install Ninja (macOS)
-        if: runner.os == 'macOS'
-        run: brew install ninja
-
-      - name: Install Ninja (Windows)
-        if: runner.os == 'Windows'
-        run: pip install ninja
-
       # 配置编译缓存加速构建
       - name: Setup sccache
         uses: hendrikmuhs/ccache-action@v1.2

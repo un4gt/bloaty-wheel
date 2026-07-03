@@ -8,13 +8,17 @@ executables and libraries.
 import functools
 import subprocess
 import sys
-from importlib.resources import files
 from pathlib import Path
+
+if sys.version_info >= (3, 9):
+    from importlib.resources import files as _resource_files
+else:
+    from importlib_resources import files as _resource_files
 
 __version__ = "1.1.0.0"
 
 
-@functools.cache
+@functools.lru_cache(maxsize=None)
 def _get_executable(name: str) -> Path:
     """
     查找 bloaty 可执行文件。
@@ -31,7 +35,7 @@ def _get_executable(name: str) -> Path:
         FileNotFoundError: 如果找不到可执行文件
     """
     # 检测多种可能的可执行文件扩展名
-    package_root = Path(str(files("bloaty")))
+    package_root = Path(str(_resource_files("bloaty")))
     possibles = [
         package_root / "data" / "bin" / f"{name}{suffix}"
         for suffix in ("", ".exe")

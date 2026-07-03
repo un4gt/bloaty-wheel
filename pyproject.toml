@@ -13,6 +13,9 @@ authors = [
     {name = "Google (original)", email = "opensource@google.com"},
     {name = "Tumuer Zunong", email = "muerzunong.tu@gmail.com"}
 ]
+dependencies = [
+    "importlib-resources>=5; python_version < '3.9'",
+]
 keywords = ["bloaty", "binary", "size", "profiler", "elf", "mach-o", "pe"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -57,26 +60,12 @@ wheel.py-api = "py2.py3"
 [tool.cibuildwheel]
 build-verbosity = 3
 environment = "CMAKE_GENERATOR=Ninja"
+before-build = "python -m pip install ninja"
 test-command = "pytest {package}/tests"
 test-requires = ["pytest"]
 
 # 跳过 32 位和旧版本 Python
 skip = ["*-win32", "*-manylinux_i686", "pp*", "cp36-*", "cp37-*"]
-
-[tool.cibuildwheel.linux]
-before-all = [
-    "yum install -y ninja-build || apt-get install -y ninja-build || apk add ninja"
-]
-
-[tool.cibuildwheel.macos]
-before-all = [
-    "brew install ninja"
-]
-
-[tool.cibuildwheel.windows]
-before-build = [
-    "pip install ninja"
-]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
