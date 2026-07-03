@@ -53,7 +53,6 @@ dev = [
 cmake.build-type = "Release"
 wheel.packages = ["src/bloaty"]
 wheel.py-api = "py2.py3"
-wheel.install-dir = "bloaty"
 
 [tool.cibuildwheel]
 build-verbosity = 3
