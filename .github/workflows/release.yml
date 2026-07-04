@@ -24,7 +24,7 @@ jobs:
           - {os: "windows-latest", platform: "win", arch: "AMD64"}
           # macOS
           - {os: "macos-13", platform: "macos", arch: "x86_64"}
-          - {os: "macos-latest", platform: "macos", arch: "arm64"}
+          - {os: "macos-14", platform: "macos", arch: "arm64"}
 
     steps:
       - uses: actions/checkout@v4

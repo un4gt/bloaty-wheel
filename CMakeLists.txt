@@ -74,6 +74,16 @@ if(MSVC)
        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>)
 endif()
 
+if(APPLE)
+  foreach(_bloaty_osx_var CMAKE_OSX_ARCHITECTURES CMAKE_OSX_DEPLOYMENT_TARGET
+                          CMAKE_OSX_SYSROOT)
+    if(DEFINED ${_bloaty_osx_var} AND NOT "${${_bloaty_osx_var}}" STREQUAL "")
+      list(APPEND BLOATY_CMAKE_ARGS
+           -D${_bloaty_osx_var}=${${_bloaty_osx_var}})
+    endif()
+  endforeach()
+endif()
+
 # 使用 ExternalProject 从 Git 克隆和构建 bloaty
 ExternalProject_Add(
   build-bloaty

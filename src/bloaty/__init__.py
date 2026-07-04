@@ -15,7 +15,7 @@ if sys.version_info >= (3, 9):
 else:
     from importlib_resources import files as _resource_files
 
-__version__ = "1.1.0.0"
+__version__ = "1.1.0.1"
 
 
 @functools.lru_cache(maxsize=None)
